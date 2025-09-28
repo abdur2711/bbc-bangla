@@ -1,4 +1,5 @@
 const categoryContainer = document.getElementById('category-container');
+const newsContainer = document.getElementById('news-container');
 
 const loadCategory = () => {
   fetch('https://news-api-fs.vercel.app/api/categories')
@@ -25,14 +26,44 @@ const showCategory = (categories) => {
     })
 
     if (e.target.localName === 'li') {
-      e.target.classList.add('border-b-4')
+      e.target.classList.add('border-b-4');
+      loadNewsByCategory(e.target.id)
     }
+  })
+};
+
+// News by category
+const loadNewsByCategory = (id) => {
+  fetch(`https://news-api-fs.vercel.app/api/categories/${id}`)
+  .then(res => res.json())
+  .then(data => {
+    showNewsByCategory(data.articles);
+  })
+  .catch(err => {
+    console.log(err)
   })
 }
 
+const showNewsByCategory = (articles) => {
+  console.log(articles)
+
+  newsContainer.innerHTML = '';
+
+  articles.forEach(article => {
+    newsContainer.innerHTML += `
+      <div>
+        <div>
+          <img src="${article.image.srcset[5].url}">
+        </div>
+        <h1>${article.title}</h1>
+        <p>${article.time}</p>
+      </div>
+    `
+  })
+}
 
 loadCategory();
-
+loadNewsByCategory('main')
 
 // const loadCategoryAsync = async () => {
 //   try {
