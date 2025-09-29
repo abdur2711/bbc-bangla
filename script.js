@@ -30,6 +30,7 @@ const showCategory = (categories) => {
     })
 
     if (e.target.localName === 'li') {
+      showLoading();
       e.target.classList.add('border-b-4');
       loadNewsByCategory(e.target.id)
     }
@@ -45,10 +46,16 @@ const loadNewsByCategory = (id) => {
   })
   .catch(err => {
     console.log(err)
+    showErr();
   })
 }
 
 const showNewsByCategory = (articles) => {
+  if (articles.length === 0) {
+    showEmptyMessage();
+    return;
+  }
+
   newsContainer.innerHTML = '';
 
   articles.forEach(article => {
@@ -104,6 +111,24 @@ const handleDeleteBookmark = (id) => {
 
   bookmarks = filteredBookmarks;
   showBookmarks(bookmarks);
+}
+
+const showLoading = () => {
+  newsContainer.innerHTML = `
+    <div class="bg-green-600 p-5">Loading...</div>
+  `
+}
+
+const showErr = () => {
+  newsContainer.innerHTML = `
+    <div class="bg-red-500 p-5">Something went wrong!</div>
+  `
+}
+
+const showEmptyMessage = () => {
+  newsContainer.innerHTML = `
+    <div class="bg-orange-600 p-5">No news found in this category</div>
+  `
 }
 
 loadCategory();
